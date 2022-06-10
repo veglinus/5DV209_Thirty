@@ -1,6 +1,7 @@
 package se.umu.lihv0010.thirty
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -9,37 +10,31 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var reroll: Button
 
-    private var dices = Array(6) { Dice() }
     private var diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
-    private var selected: MutableList<Int> = mutableListOf()
+    private var game = Game() // Initialize new game
+    private var selected = game.currentRound.selected
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        reroll = findViewById(R.id.reroll) // Reroll button
-        reroll.setOnClickListener {
-            rollAll()
-        }
-
-        setupOnClickDiceLogic()
-        refreshDiceView()
+        setupListeners()
     }
 
-    private fun rollAll() {
-        for (dice in dices) {
-            dice.roll()
-        }
-        refreshDiceView()
-    }
+
 
     private fun refreshDiceView() { // Draws dice values to view
+        var dices = game.currentRound.dices
         for ((index, id) in diceViews.withIndex()) {
             var currentView: TextView = findViewById(id)
-            currentView.setText(dices[index].value.toString())
+            currentView.text = dices[index].value.toString()
         }
     }
 
+    private fun setupListeners() {
+        setupOnClickDiceLogic()
+        setupReroll()
+    }
     private fun setupOnClickDiceLogic() {
         for ((index, id) in diceViews.withIndex()) { // Sets eventlisteners for all dice
             val currView: TextView = findViewById(id)
@@ -54,10 +49,14 @@ class MainActivity : AppCompatActivity() {
 
                 println("Selected dice are: $selected")
             }
+
+            // Listen for text change to trigger refreshDiceView()
         }
     }
-
-    private fun clearSelected() {
-        selected = mutableListOf()
+    private fun setupReroll() {
+        reroll = findViewById(R.id.reroll) // Reroll button
+        reroll.setOnClickListener {
+            game.currentRound.roll()
+        }
     }
 }
