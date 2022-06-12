@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
     private lateinit var reroll: Button
@@ -19,9 +20,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setupListeners()
+        refreshDiceView()
     }
-
-
 
     private fun refreshDiceView() { // Draws dice values to view
         var dices = game.currentRound.dices
@@ -43,8 +43,10 @@ class MainActivity : AppCompatActivity() {
 
                 if (!selected.contains(index)) { // Adds to selected list if not already in there
                     selected.add(index)
+                    drawSelected(currView)
                 } else { // If already in list, remove from selected list
                     selected.remove(index)
+                    unDrawSelected(currView)
                 }
 
                 println("Selected dice are: $selected")
@@ -57,6 +59,14 @@ class MainActivity : AppCompatActivity() {
         reroll = findViewById(R.id.reroll) // Reroll button
         reroll.setOnClickListener {
             game.currentRound.roll()
+            refreshDiceView()
         }
+    }
+
+    private fun drawSelected(view: TextView) {
+        view.setBackgroundResource(R.drawable.border_selected)
+    }
+    private fun unDrawSelected(view: TextView) {
+        view.setBackgroundResource(R.drawable.border)
     }
 }

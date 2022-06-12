@@ -20,7 +20,10 @@
         android:text="N/A"
         android:textSize="48dp"
         tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="40dp" />
+        tools:layout_editor_absoluteY="40dp"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        />
 
     <TextView
         android:id="@+id/dice2"
@@ -29,7 +32,10 @@
         android:text="N/A"
         android:textSize="48dp"
         tools:layout_editor_absoluteX="286dp"
-        tools:layout_editor_absoluteY="40dp" />
+        tools:layout_editor_absoluteY="40dp"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        />
 
     <TextView
         android:id="@+id/dice3"
@@ -38,7 +44,10 @@
         android:text="N/A"
         android:textSize="48dp"
         tools:layout_editor_absoluteX="41dp"
-        tools:layout_editor_absoluteY="40dp" />
+        tools:layout_editor_absoluteY="40dp"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        />
 
     <TextView
         android:id="@+id/dice4"
@@ -47,7 +56,10 @@
         android:text="N/A"
         android:textSize="48dp"
         tools:layout_editor_absoluteX="41dp"
-        tools:layout_editor_absoluteY="137dp" />
+        tools:layout_editor_absoluteY="137dp"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        />
 
     <TextView
         android:id="@+id/dice5"
@@ -56,7 +68,10 @@
         android:text="N/A"
         android:textSize="48dp"
         tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="137dp" />
+        tools:layout_editor_absoluteY="137dp"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        />
 
     <TextView
         android:id="@+id/dice6"
@@ -65,7 +80,10 @@
         android:text="N/A"
         android:textSize="48dp"
         tools:layout_editor_absoluteX="286dp"
-        tools:layout_editor_absoluteY="137dp" />
+        tools:layout_editor_absoluteY="137dp"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        />
 
     </LinearLayout>
 
