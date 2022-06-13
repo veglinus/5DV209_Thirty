@@ -1,19 +1,21 @@
 package se.umu.lihv0010.thirty
 
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.w3c.dom.Text
+
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var reroll: Button
-
     private var diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
     private var game = Game() // Initialize new game
     private var selected = game.currentRound.selected
+
+    // TODO: Display rolls left, also like "no rolls left, choose dice to submit"
+    // TODO: Submit button beside spinner
+    // TODO: Dice image logic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +36,14 @@ class MainActivity : AppCompatActivity() {
     private fun setupListeners() {
         setupOnClickDiceLogic()
         setupReroll()
+        setupSpinner()
     }
+
     private fun setupOnClickDiceLogic() {
         for ((index, id) in diceViews.withIndex()) { // Sets eventlisteners for all dice
             val currView: TextView = findViewById(id)
             currView.setOnClickListener {
                 //println("You pressed dice: $index")
-
                 if (!selected.contains(index)) { // Adds to selected list if not already in there
                     selected.add(index)
                     drawSelected(currView)
@@ -48,19 +51,25 @@ class MainActivity : AppCompatActivity() {
                     selected.remove(index)
                     unDrawSelected(currView)
                 }
-
                 println("Selected dice are: $selected")
+                checkRollButton()
             }
-
-            // Listen for text change to trigger refreshDiceView()
         }
     }
+
     private fun setupReroll() {
-        reroll = findViewById(R.id.reroll) // Reroll button
+        var reroll: Button = findViewById(R.id.reroll) // Reroll button
         reroll.setOnClickListener {
             game.currentRound.roll()
             refreshDiceView()
         }
+    }
+
+    private fun setupSpinner() {
+        val spinner: Spinner = findViewById(R.id.spinner1)
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, game.selectors)
+        spinner.adapter = spinnerAdapter
+        // TODO: Does this refresh after a submit has occurred?
     }
 
     private fun drawSelected(view: TextView) {
@@ -68,5 +77,14 @@ class MainActivity : AppCompatActivity() {
     }
     private fun unDrawSelected(view: TextView) {
         view.setBackgroundResource(R.drawable.border)
+    }
+
+    private fun checkRollButton() {
+        var reroll: Button = findViewById(R.id.reroll) // Reroll button
+        if (selected.isEmpty()) {
+            reroll.text = "Reroll all"
+        } else {
+            reroll.text = "Roll selected"
+        }
     }
 }

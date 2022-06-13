@@ -1,14 +1,9 @@
 package se.umu.lihv0010.thirty
 
-import android.widget.Toast
-
-// TODO: Separate into round file
-
 class Round {
-    private var diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
-    var dices = Array(6) { Dice() }
-    var selected: MutableList<Int> = mutableListOf()
-    var rolls = 0
+    var dices = Array(6) { Dice() } // 6 dice objects, rollable
+    var selected: MutableList<Int> = mutableListOf() // Index list of selected dice
+    var rolls = 0 // How many rolls have been made, max of 2 after initial allowed
 
     fun roll() {
         if (rolls < 2) {
