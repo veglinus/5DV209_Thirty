@@ -1,8 +1,10 @@
 package se.umu.lihv0010.thirty
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
             var id = dices[index].value - 1 // For array offset
             currentView.setImageResource(whiteDices[id])
-
+0
             if (unDraw) {
                 unDrawSelected(currentView, dices[index].value)
             }
@@ -83,12 +85,53 @@ class MainActivity : AppCompatActivity() {
             var selectedScoring = spinner.selectedItem.toString().toInt()
             var completion: Boolean = game.validateSubmit(selectedScoring)
 
-            refreshDiceView(completion)
-
             if (completion) {
                 setupSpinner()
             }
+
+            if (game.roundsPlayed >= game.maxRounds) { // CHeck for win
+                endGame()
+            } else {
+                game.currentRound = Round()
+                refreshDiceView(completion)
+            }
         }
+    }
+
+    private fun endGame() {
+        println("Ending game!")
+        var results = game.results
+        var score = game.score
+        // Source: https://developer.android.com/guide/topics/ui/dialogs
+        this.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setMessage(
+                    "Low: " + results[0].toString() + "\n" +
+                            "4: " + results[1].toString() + "\n" +
+                            "5: " + results[2].toString() + "\n" +
+                            "6: " + results[3].toString() + "\n" +
+                            "7: " + results[4].toString() + "\n" +
+                            "8: " + results[5].toString() + "\n" +
+                            "9: " + results[6].toString() + "\n" +
+                            "10: " + results[7].toString() + "\n" +
+                            "11: " + results[8].toString() + "\n" +
+                            "12: " + results[9].toString() + "\n\n" +
+                            "Total score: $score"
+                )
+                setPositiveButton(R.string.play_again) { dialog, id ->
+                    game = Game()
+                    game.mainContext = this@MainActivity
+                    refreshDiceView(true)
+                    setupSpinner()
+                }
+                setNegativeButton(R.string.exit) { dialog, id ->
+                    moveTaskToBack(true);
+                    exitProcess(-1)
+                }
+            }
+            builder.create()
+        }?.show()
     }
 
     private fun setupSpinner() {
@@ -115,5 +158,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             reroll.text = resources.getString(R.string.reroll_selected)
         }
+    }
+
+    private fun restartGame() {
+        game = Game()
+        refreshDiceView(true)
+        game.mainContext = this@MainActivity
     }
 }

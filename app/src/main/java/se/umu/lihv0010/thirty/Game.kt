@@ -1,15 +1,19 @@
 package se.umu.lihv0010.thirty
 
+import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import java.lang.Exception
+import kotlin.system.exitProcess
 
 class Game {
     lateinit var mainContext: Context
     var currentRound = Round()
     var score: Int = 0
+    var results: MutableList<Int> = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     var roundsPlayed: Int = 0
     var selectors: MutableList<Int> = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+
 
     val maxRounds = 10
 
@@ -34,7 +38,7 @@ class Game {
         }
     }
 
-    private fun lowCalculation(diceNumbers: MutableList<Number>, selected: Any, sum: Int): Boolean {
+    private fun lowCalculation(diceNumbers: MutableList<Number>, selected: Int, sum: Int): Boolean {
         var lowCheck = true
         for (number in diceNumbers) {
             if (number.toInt() > 3) {
@@ -67,20 +71,20 @@ class Game {
         println(error)
     }
 
-    private fun finishRound(selected: Any, points: Int) {
+    private fun finishRound(selected: Int, points: Int) {
         println("Round finished! Score added: $points")
         selectors.remove(selected)
         score += points
+        results[selected - 3] = points
+        println(results)
         roundsPlayed++
 
+        println("$roundsPlayed out of $maxRounds")
+        /*
         if (roundsPlayed >= maxRounds) {
             endGame()
         } else {
             currentRound = Round()
-        }
-    }
-
-    private fun endGame() {
-        // TODO: Implement
+        }*/
     }
 }
