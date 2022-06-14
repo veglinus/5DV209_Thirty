@@ -15,7 +15,8 @@ class MainActivity : AppCompatActivity() {
     private var game = Game() // Initialize new game
 
     // TODO: Handle state change
-    // TODO: Show score and rounds played
+    // TODO: Landscape layout
+    // TODO: MVC Optimizations?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         setupReroll()
         setupSpinner()
         setupSubmit()
+        updateScoreAndRounds()
     }
 
     private fun setupOnClickDiceLogic() {
@@ -77,23 +79,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateScoreAndRounds() {
+        val rounds: TextView = findViewById(R.id.rounds)
+        val score: TextView = findViewById(R.id.score)
+
+
+        rounds.text = game.roundsPlayed.toString() + "/10"
+        score.text = "Score: " + game.score.toString()
+
+    }
+
     private fun setupSubmit() {
         val submit: Button = findViewById(R.id.submit)
-        var spinner: Spinner = findViewById(R.id.spinner)
+        val spinner: Spinner = findViewById(R.id.spinner)
 
         submit.setOnClickListener {
-            var selectedScoring = spinner.selectedItem.toString().toInt()
-            var completion: Boolean = game.validateSubmit(selectedScoring)
+            val validationSuccess: Boolean
+            val selectedScoring = spinner.selectedItem
 
-            if (completion) {
-                setupSpinner()
+            validationSuccess = if (selectedScoring == "Low") {
+                game.validateSubmit(3)
+            } else {
+                game.validateSubmit(selectedScoring.toString().toInt())
             }
 
-            if (game.roundsPlayed >= game.maxRounds) { // CHeck for win
-                endGame()
-            } else {
-                game.currentRound = Round()
-                refreshDiceView(completion)
+            if (validationSuccess) { // If calculation was done and added to score causing a new round
+                setupSpinner()
+                updateScoreAndRounds()
+
+                if (game.roundsPlayed >= game.maxRounds) { // CHeck for win
+                    endGame()
+                } else {
+                    game.currentRound = Round()
+                    refreshDiceView(validationSuccess)
+                }
             }
         }
     }
@@ -136,7 +155,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSpinner() {
         val spinner: Spinner = findViewById(R.id.spinner)
-        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, game.selectors)
+        var newArray: MutableList<Any> = game.selectors.toMutableList()
+
+        if (newArray.contains(3)) {
+            newArray[newArray.indexOf(3)] = "Low"
+        }
+
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, newArray)
         spinner.adapter = spinnerAdapter
     }
 

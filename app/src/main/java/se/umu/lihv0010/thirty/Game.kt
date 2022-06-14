@@ -14,23 +14,22 @@ class Game {
     var roundsPlayed: Int = 0
     var selectors: MutableList<Int> = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
 
-
     val maxRounds = 10
 
-    fun validateSubmit(selected: Int): Boolean {
+    fun validateSubmit(selected: Int): Boolean { // When submitting answer, validate it's correct
         try {
-            var diceNumbers: MutableList<Number> = currentRound.selectedDiceValues()
+            var diceNumbers: MutableList<Int> = currentRound.selectedDiceValues()
             //println("Spinner is: $selected and dice values are: $diceNumbers")
 
             var sum: Int = 0
             for (number in diceNumbers) {
-                sum += number.toInt()
+                sum += number
             }
 
-            if (selected == 3) {
-                return lowCalculation(diceNumbers, selected, sum)
+            return if (selected == 3) {
+                lowCalculation(diceNumbers, selected, sum)
             } else {
-                return otherCalculation(sum, selected)
+                otherCalculation(sum, selected)
             }
 
         } catch (e: Exception) {
@@ -38,31 +37,31 @@ class Game {
         }
     }
 
-    private fun lowCalculation(diceNumbers: MutableList<Number>, selected: Int, sum: Int): Boolean {
+    private fun lowCalculation(diceNumbers: MutableList<Int>, selected: Int, sum: Int): Boolean {
         var lowCheck = true
         for (number in diceNumbers) {
             if (number.toInt() > 3) {
                 lowCheck = false
             }
         }
-        if (lowCheck) {
+        return if (lowCheck) {
             finishRound(selected, sum)
-            return true
+            true
         } else {
             invalidCombo("One or more dice has a value higher than 3.")
-            return false
+            false
         }
     }
 
     private fun otherCalculation(sum: Int, selected: Int): Boolean {
         val isDivisible: Boolean = (sum % selected == 0)
 
-        if (isDivisible) {
+        return if (isDivisible) {
             finishRound(selected, sum)
-            return true
+            true
         } else {
             invalidCombo("That combination is not possible.")
-            return false
+            false
         }
     }
 
@@ -80,11 +79,5 @@ class Game {
         roundsPlayed++
 
         println("$roundsPlayed out of $maxRounds")
-        /*
-        if (roundsPlayed >= maxRounds) {
-            endGame()
-        } else {
-            currentRound = Round()
-        }*/
     }
 }
