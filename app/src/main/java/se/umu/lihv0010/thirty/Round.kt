@@ -21,7 +21,7 @@ class Round {
     }
 
     fun selectedDiceValues(): MutableList<Int> {
-        var values: MutableList<Int> = mutableListOf()
+        val values: MutableList<Int> = mutableListOf()
         for (id in selected) {
             values.add(dices[id].value)
         }

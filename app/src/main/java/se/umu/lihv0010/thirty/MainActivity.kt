@@ -32,9 +32,8 @@ class MainActivity : AppCompatActivity() {
         for ((index, id) in diceViews.withIndex()) {
             val currentView: ImageButton = findViewById(id)
 
-            var id = dices[index].value - 1 // For array offset
-            currentView.setImageResource(whiteDices[id])
-0
+            val idOffset = dices[index].value - 1 // For array offset
+            currentView.setImageResource(whiteDices[idOffset])
             if (unDraw) {
                 unDrawSelected(currentView, dices[index].value)
             }
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupOnClickDiceLogic() {
-        for ((index, id) in diceViews.withIndex()) { // Sets eventlisteners for all dice
+        for ((index, id) in diceViews.withIndex()) { // Sets listeners for all dice
             val currView: ImageButton = findViewById(id)
             currView.setOnClickListener {
                 //println("You pressed dice: $index")
@@ -82,11 +81,8 @@ class MainActivity : AppCompatActivity() {
     private fun updateScoreAndRounds() {
         val rounds: TextView = findViewById(R.id.rounds)
         val score: TextView = findViewById(R.id.score)
-
-
-        rounds.text = game.roundsPlayed.toString() + "/10"
-        score.text = "Score: " + game.score.toString()
-
+        rounds.text = getString(R.string.rounds, game.roundsPlayed.toString())
+        score.text = getString(R.string.score, game.score.toString())
     }
 
     private fun setupSubmit() {
@@ -119,8 +115,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun endGame() {
         println("Ending game!")
-        var results = game.results
-        var score = game.score
+        val results = game.results
+        val score = game.score
         // Source: https://developer.android.com/guide/topics/ui/dialogs
         this.let {
             val builder = AlertDialog.Builder(it)
@@ -138,14 +134,14 @@ class MainActivity : AppCompatActivity() {
                             "12: " + results[9].toString() + "\n\n" +
                             "Total score: $score"
                 )
-                setPositiveButton(R.string.play_again) { dialog, id ->
+                setPositiveButton(R.string.play_again) { _, _ ->
                     game = Game()
                     game.mainContext = this@MainActivity
                     refreshDiceView(true)
                     setupSpinner()
                 }
-                setNegativeButton(R.string.exit) { dialog, id ->
-                    moveTaskToBack(true);
+                setNegativeButton(R.string.exit) { _, _ ->
+                    moveTaskToBack(true)
                     exitProcess(-1)
                 }
             }
@@ -155,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSpinner() {
         val spinner: Spinner = findViewById(R.id.spinner)
-        var newArray: MutableList<Any> = game.selectors.toMutableList()
+        val newArray: MutableList<Any> = game.selectors.toMutableList()
 
         if (newArray.contains(3)) {
             newArray[newArray.indexOf(3)] = "Low"
@@ -166,11 +162,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun drawSelected(view: ImageButton, value: Int) {
-        var id = value - 1
+        val id = value - 1
         view.setImageResource(redDices[id])
     }
     private fun unDrawSelected(view: ImageButton, value: Int) {
-        var id = value - 1
+        val id = value - 1
         view.setImageResource(whiteDices[id])
     }
 
@@ -183,11 +179,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             reroll.text = resources.getString(R.string.reroll_selected)
         }
-    }
-
-    private fun restartGame() {
-        game = Game()
-        refreshDiceView(true)
-        game.mainContext = this@MainActivity
     }
 }

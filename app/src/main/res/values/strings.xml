@@ -7,4 +7,7 @@
     
     <string name="play_again">Play again</string>
     <string name="exit">Exit</string>
+
+    <string name="rounds">%1$s/10</string>
+    <string name="score">Score: %1$s</string>
 </resources>

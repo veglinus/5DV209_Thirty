@@ -1,10 +1,8 @@
 package se.umu.lihv0010.thirty
 
-import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import java.lang.Exception
-import kotlin.system.exitProcess
 
 class Game {
     lateinit var mainContext: Context
@@ -18,10 +16,10 @@ class Game {
 
     fun validateSubmit(selected: Int): Boolean { // When submitting answer, validate it's correct
         try {
-            var diceNumbers: MutableList<Int> = currentRound.selectedDiceValues()
+            val diceNumbers: MutableList<Int> = currentRound.selectedDiceValues()
             //println("Spinner is: $selected and dice values are: $diceNumbers")
 
-            var sum: Int = 0
+            var sum = 0
             for (number in diceNumbers) {
                 sum += number
             }
@@ -40,7 +38,7 @@ class Game {
     private fun lowCalculation(diceNumbers: MutableList<Int>, selected: Int, sum: Int): Boolean {
         var lowCheck = true
         for (number in diceNumbers) {
-            if (number.toInt() > 3) {
+            if (number > 3) {
                 lowCheck = false
             }
         }
