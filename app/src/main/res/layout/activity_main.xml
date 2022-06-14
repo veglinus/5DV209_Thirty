@@ -26,11 +26,11 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <TextView
+            <ImageButton
                 android:id="@+id/dice1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
+                android:src="@drawable/white1"
                 android:padding="5dp"
                 android:layout_margin="5dp"
                 android:text="N/A"
@@ -38,11 +38,11 @@
                 tools:layout_editor_absoluteX="163dp"
                 tools:layout_editor_absoluteY="40dp" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/dice2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
+                android:src="@drawable/white1"
                 android:padding="5dp"
                 android:layout_margin="5dp"
                 android:text="N/A"
@@ -50,11 +50,11 @@
                 tools:layout_editor_absoluteX="286dp"
                 tools:layout_editor_absoluteY="40dp" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/dice3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
+                android:src="@drawable/white1"
                 android:padding="5dp"
                 android:layout_margin="5dp"
                 android:text="N/A"
@@ -70,11 +70,11 @@
             android:gravity="center">
 
 
-            <TextView
+            <ImageButton
                 android:id="@+id/dice4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
+                android:src="@drawable/white1"
                 android:padding="5dp"
                 android:layout_margin="5dp"
                 android:text="N/A"
@@ -82,11 +82,11 @@
                 tools:layout_editor_absoluteX="41dp"
                 tools:layout_editor_absoluteY="137dp" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/dice5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
+                android:src="@drawable/white1"
                 android:padding="5dp"
                 android:layout_margin="5dp"
                 android:text="N/A"
@@ -94,11 +94,11 @@
                 tools:layout_editor_absoluteX="163dp"
                 tools:layout_editor_absoluteY="137dp" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/dice6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border"
+                android:src="@drawable/white1"
                 android:padding="5dp"
                 android:layout_margin="5dp"
                 android:text="N/A"

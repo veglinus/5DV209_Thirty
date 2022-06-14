@@ -1,19 +1,19 @@
 package se.umu.lihv0010.thirty
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 
 class MainActivity : AppCompatActivity() {
     private val diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
+    private val whiteDices = intArrayOf(R.drawable.white1, R.drawable.white2, R.drawable.white3, R.drawable.white4, R.drawable.white5, R.drawable.white6)
+    private val redDices = intArrayOf(R.drawable.red1, R.drawable.red2, R.drawable.red3, R.drawable.red4, R.drawable.red5, R.drawable.red6)
+
     private var game = Game() // Initialize new game
 
-    // TODO: Dice image logic
     // TODO: Handle state change
+    // TODO: Show score and rounds played
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,16 +21,19 @@ class MainActivity : AppCompatActivity() {
 
         setupListeners()
         refreshDiceView(true)
+        game.mainContext = this@MainActivity
     }
 
     private fun refreshDiceView(unDraw: Boolean) { // Draws dice values to view
         val dices = game.currentRound.dices
         for ((index, id) in diceViews.withIndex()) {
-            val currentView: TextView = findViewById(id)
-            currentView.text = dices[index].value.toString()
+            val currentView: ImageButton = findViewById(id)
+
+            var id = dices[index].value - 1 // For array offset
+            currentView.setImageResource(whiteDices[id])
 
             if (unDraw) {
-                unDrawSelected(currentView)
+                unDrawSelected(currentView, dices[index].value)
             }
             checkRollButton()
         }
@@ -45,15 +48,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupOnClickDiceLogic() {
         for ((index, id) in diceViews.withIndex()) { // Sets eventlisteners for all dice
-            val currView: TextView = findViewById(id)
+            val currView: ImageButton = findViewById(id)
             currView.setOnClickListener {
                 //println("You pressed dice: $index")
-                if (!game.currentRound.selected.contains(index)) { // Adds to selected list if not already in there
+                if (!game.currentRound.selected.contains(index)) { // Adds to selected list if not already in there, if so removes it
                     game.currentRound.selected.add(index)
-                    drawSelected(currView)
+                    drawSelected(currView, game.currentRound.dices[index].value)
                 } else { // If already in list, remove from selected list
                     game.currentRound.selected.remove(index)
-                    unDrawSelected(currView)
+                    unDrawSelected(currView, game.currentRound.dices[index].value)
                 }
                 println("Selected dice are: ${game.currentRound.selected}")
                 checkRollButton()
@@ -64,6 +67,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupReroll() {
         val reroll: Button = findViewById(R.id.reroll) // Reroll button
         reroll.setOnClickListener {
+            if (game.currentRound.rolls > 2) {
+                Toast.makeText(this, "Already rolled 2 times.", Toast.LENGTH_SHORT).show()
+            }
             game.currentRound.roll()
             refreshDiceView(true)
         }
@@ -82,8 +88,6 @@ class MainActivity : AppCompatActivity() {
             if (completion) {
                 setupSpinner()
             }
-            // TODO: Submit button logic
-            // TODO: Update view
         }
     }
 
@@ -91,14 +95,15 @@ class MainActivity : AppCompatActivity() {
         val spinner: Spinner = findViewById(R.id.spinner)
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, game.selectors)
         spinner.adapter = spinnerAdapter
-        // TODO: Does this refresh after a submit has occurred?
     }
 
-    private fun drawSelected(view: TextView) {
-        view.setBackgroundResource(R.drawable.border_selected)
+    private fun drawSelected(view: ImageButton, value: Int) {
+        var id = value - 1
+        view.setImageResource(redDices[id])
     }
-    private fun unDrawSelected(view: TextView) {
-        view.setBackgroundResource(R.drawable.border)
+    private fun unDrawSelected(view: ImageButton, value: Int) {
+        var id = value - 1
+        view.setImageResource(whiteDices[id])
     }
 
     private fun checkRollButton() {

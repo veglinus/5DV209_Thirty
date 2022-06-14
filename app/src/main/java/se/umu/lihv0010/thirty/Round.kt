@@ -16,7 +16,6 @@ class Round {
 
         } else {
             clearSelected()
-            //Toast.makeText(this, "Already rolled 2 times.", Toast.LENGTH_SHORT).show() // TODO: Implement toast
             println("Already rolled 2 times.")
         }
     }
@@ -44,11 +43,11 @@ class Round {
     private fun afterRoll() {
         clearSelected()
         rolls++
-        println("Rolls are now: $rolls")
+        //println("Rolls are now: $rolls")
     }
 
     private fun clearSelected() {
         this.selected = mutableListOf() // Clears selected list
-        println("Selected dice are $selected")
+        //println("Selected dice are $selected")
     }
 }

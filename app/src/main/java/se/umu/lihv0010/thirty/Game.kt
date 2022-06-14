@@ -1,8 +1,11 @@
 package se.umu.lihv0010.thirty
 
+import android.content.Context
+import android.widget.Toast
 import java.lang.Exception
 
 class Game {
+    lateinit var mainContext: Context
     var currentRound = Round()
     var score: Int = 0
     var roundsPlayed: Int = 0
@@ -60,13 +63,13 @@ class Game {
     }
 
     private fun invalidCombo(error: String) {
-        // TODO: Implement
+        Toast.makeText(mainContext, "Invalid combination.", Toast.LENGTH_SHORT).show()
         println(error)
     }
 
     private fun finishRound(selected: Any, points: Int) {
         println("Round finished! Score added: $points")
-        selectors.remove(selected) // TODO: this could bring a problem
+        selectors.remove(selected)
         score += points
         roundsPlayed++
 
