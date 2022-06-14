@@ -16,6 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginTop="10dp"
         tools:context=".MainActivity">
 
         <TableRow
@@ -30,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:layout_margin="5dp"
                 android:text="N/A"
                 android:textSize="48dp"
                 tools:layout_editor_absoluteX="163dp"
@@ -41,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:layout_margin="5dp"
                 android:text="N/A"
                 android:textSize="48dp"
                 tools:layout_editor_absoluteX="286dp"
@@ -52,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:layout_margin="5dp"
                 android:text="N/A"
                 android:textSize="48dp"
                 tools:layout_editor_absoluteX="41dp"
@@ -71,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:layout_margin="5dp"
                 android:text="N/A"
                 android:textSize="48dp"
                 tools:layout_editor_absoluteX="41dp"
@@ -82,6 +88,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:layout_margin="5dp"
                 android:text="N/A"
                 android:textSize="48dp"
                 tools:layout_editor_absoluteX="163dp"
@@ -93,8 +100,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:layout_margin="5dp"
                 android:text="N/A"
-                android:textSize="48dp"
+                android:textSize="48sp"
                 tools:layout_editor_absoluteX="286dp"
                 tools:layout_editor_absoluteY="137dp" />
 
@@ -111,13 +119,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Spinner
-        android:id="@+id/spinner1"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/reroll"
-        app:layout_constraintStart_toStartOf="@+id/reroll" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit" />
+    </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,27 +9,30 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 class MainActivity : AppCompatActivity() {
-    private var diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
+    private val diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
     private var game = Game() // Initialize new game
-    private var selected = game.currentRound.selected
 
-    // TODO: Display rolls left, also like "no rolls left, choose dice to submit"
-    // TODO: Submit button beside spinner
     // TODO: Dice image logic
+    // TODO: Handle state change
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         setupListeners()
-        refreshDiceView()
+        refreshDiceView(true)
     }
 
-    private fun refreshDiceView() { // Draws dice values to view
-        var dices = game.currentRound.dices
+    private fun refreshDiceView(unDraw: Boolean) { // Draws dice values to view
+        val dices = game.currentRound.dices
         for ((index, id) in diceViews.withIndex()) {
-            var currentView: TextView = findViewById(id)
+            val currentView: TextView = findViewById(id)
             currentView.text = dices[index].value.toString()
+
+            if (unDraw) {
+                unDrawSelected(currentView)
+            }
+            checkRollButton()
         }
     }
 
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         setupOnClickDiceLogic()
         setupReroll()
         setupSpinner()
+        setupSubmit()
     }
 
     private fun setupOnClickDiceLogic() {
@@ -44,29 +48,47 @@ class MainActivity : AppCompatActivity() {
             val currView: TextView = findViewById(id)
             currView.setOnClickListener {
                 //println("You pressed dice: $index")
-                if (!selected.contains(index)) { // Adds to selected list if not already in there
-                    selected.add(index)
+                if (!game.currentRound.selected.contains(index)) { // Adds to selected list if not already in there
+                    game.currentRound.selected.add(index)
                     drawSelected(currView)
                 } else { // If already in list, remove from selected list
-                    selected.remove(index)
+                    game.currentRound.selected.remove(index)
                     unDrawSelected(currView)
                 }
-                println("Selected dice are: $selected")
+                println("Selected dice are: ${game.currentRound.selected}")
                 checkRollButton()
             }
         }
     }
 
     private fun setupReroll() {
-        var reroll: Button = findViewById(R.id.reroll) // Reroll button
+        val reroll: Button = findViewById(R.id.reroll) // Reroll button
         reroll.setOnClickListener {
             game.currentRound.roll()
-            refreshDiceView()
+            refreshDiceView(true)
+        }
+    }
+
+    private fun setupSubmit() {
+        val submit: Button = findViewById(R.id.submit)
+        var spinner: Spinner = findViewById(R.id.spinner)
+
+        submit.setOnClickListener {
+            var selectedScoring = spinner.selectedItem.toString().toInt()
+            var completion: Boolean = game.validateSubmit(selectedScoring)
+
+            refreshDiceView(completion)
+
+            if (completion) {
+                setupSpinner()
+            }
+            // TODO: Submit button logic
+            // TODO: Update view
         }
     }
 
     private fun setupSpinner() {
-        val spinner: Spinner = findViewById(R.id.spinner1)
+        val spinner: Spinner = findViewById(R.id.spinner)
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, game.selectors)
         spinner.adapter = spinnerAdapter
         // TODO: Does this refresh after a submit has occurred?
@@ -80,11 +102,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkRollButton() {
-        var reroll: Button = findViewById(R.id.reroll) // Reroll button
-        if (selected.isEmpty()) {
-            reroll.text = "Reroll all"
+        val reroll: Button = findViewById(R.id.reroll) // Reroll button
+        reroll.isEnabled = game.currentRound.rolls < 2
+
+        if (game.currentRound.selected.isEmpty()) {
+            reroll.text = resources.getString(R.string.reroll_all)
         } else {
-            reroll.text = "Roll selected"
+            reroll.text = resources.getString(R.string.reroll_selected)
         }
     }
 }

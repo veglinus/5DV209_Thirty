@@ -21,6 +21,14 @@ class Round {
         }
     }
 
+    fun selectedDiceValues(): MutableList<Number> {
+        var values: MutableList<Number> = mutableListOf()
+        for (id in selected) {
+            values.add(dices[id].value)
+        }
+        return values
+    }
+
     private fun rollAll() {
         for (dice in dices) {
             dice.roll()
@@ -40,6 +48,7 @@ class Round {
     }
 
     private fun clearSelected() {
-        selected = mutableListOf() // Clears selected list
+        this.selected = mutableListOf() // Clears selected list
+        println("Selected dice are $selected")
     }
 }
