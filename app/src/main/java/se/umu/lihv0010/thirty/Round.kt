@@ -3,11 +3,38 @@ package se.umu.lihv0010.thirty
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 
-/**
-class Round(private val handle: SavedStateHandle, var dices: Array<Dice>, var selected: MutableList<Int>, var rolls: Int) {
-    var dices = Array(6) { Dice() } // 6 dice objects, rollable
-    var selected: MutableList<Int> = mutableListOf() // Index list of selected dice
-    var rolls = 0 // How many rolls have been made, max of 2 after initial allowed
+private const val TAG = "Round"
+
+class Round(private val handle: SavedStateHandle,
+            var dices: ArrayList<Dice> = arrayListOf(Dice(), Dice(), Dice(), Dice(), Dice(), Dice()),
+            var selected: MutableList<Int> = mutableListOf(),
+            var rolls: Int = 0) {
+
+    init {
+        if (handle.contains("selected")) selected = handle.get<ArrayList<Int>>("selected")?.toMutableList() ?:
+                mutableListOf()
+        if (handle.contains("rolls")) rolls = handle.get<Int>("rolls") ?: 0
+
+
+        if (handle.contains("dices")) {
+            val savedDice = handle.get<ArrayList<Int>>("dices")
+
+            if (savedDice != null) {
+                Log.d(TAG, "Recovering saved dice: $savedDice")
+
+                var newDices: ArrayList<Dice> = arrayListOf()
+                for (dice in savedDice) {
+                    newDices.add(Dice(dice))
+                }
+                dices = newDices
+
+            }
+        } else {
+            dices = arrayListOf(Dice(), Dice(), Dice(), Dice(), Dice(), Dice())
+            Log.d(TAG, "Saved new dice")
+            handle.set("dices", getDiceIntArray())
+        }
+    }
 
     fun roll() {
         if (rolls < 2) {
@@ -24,12 +51,26 @@ class Round(private val handle: SavedStateHandle, var dices: Array<Dice>, var se
         }
     }
 
+    fun saveSelected() {
+        handle.set("selected", selected)
+    }
+
     fun selectedDiceValues(): MutableList<Int> {
         val values: MutableList<Int> = mutableListOf()
         for (id in selected) {
-            values.add(dices[id].value)
+            values.add(dices[id].value!!)
         }
         return values
+    }
+
+    fun getDiceIntArray(): ArrayList<Int> {
+        var arr = mutableListOf<Int>()
+
+        for (dice in dices) {
+            arr.add(dice.value!!)
+        }
+
+        return arr as ArrayList<Int>
     }
 
     private fun rollAll() {
@@ -48,7 +89,7 @@ class Round(private val handle: SavedStateHandle, var dices: Array<Dice>, var se
         clearSelected()
         rolls++
 
-        handle.set("dices", dices)
+        handle.set("dices", getDiceIntArray())
         handle.set("selected", selected)
         handle.set("rolls", rolls)
         //println("Rolls are now: $rolls")
@@ -59,4 +100,3 @@ class Round(private val handle: SavedStateHandle, var dices: Array<Dice>, var se
         //println("Selected dice are $selected")
     }
 }
-        */

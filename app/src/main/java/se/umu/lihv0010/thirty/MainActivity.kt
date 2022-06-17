@@ -2,32 +2,25 @@ package se.umu.lihv0010.thirty
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import se.umu.lihv0010.thirty.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
+
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     private val diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
     private val whiteDices = intArrayOf(R.drawable.white1, R.drawable.white2, R.drawable.white3, R.drawable.white4, R.drawable.white5, R.drawable.white6)
     private val redDices = intArrayOf(R.drawable.red1, R.drawable.red2, R.drawable.red3, R.drawable.red4, R.drawable.red5, R.drawable.red6)
-
-    private val TAG = "debug"
     private lateinit var binding: ActivityMainBinding
+    private lateinit var game: GameViewModel
 
-    private lateinit var game: MainViewModel
-
-    // TODO: Handle state change
     // TODO: True random dice?
     // TODO: Landscape layout
-    // TODO: MVC Optimizations?
-
     // TODO: Stylesheet as in föreläsning 3
-    // TODO: Replace findviewbyid with binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,15 +28,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Log.d(TAG, "onCreate called")
+        game = ViewModelProvider(this)[GameViewModel::class.java]
 
-        game = ViewModelProvider(this)[MainViewModel::class.java]
-
-        setupListeners() // TODO: This is being called every time we resume app also
+        setupListeners()
         refreshDiceView(false)
-        game.mainContext = this@MainActivity
     }
 
-    fun setupListeners() {
+    private fun setupListeners() {
         Log.d(TAG, "Setting up ALL listeners!")
         setupOnClickDiceLogic()
         setupReroll()
@@ -52,8 +43,8 @@ class MainActivity : AppCompatActivity() {
         updateScoreAndRounds()
     }
 
-    fun refreshDiceView(unDrawSelected: Boolean) { // Draws dice values to view
-        Log.d(TAG, "Refreshing diceview")
+    private fun refreshDiceView(unDrawSelected: Boolean) { // Draws dice values to view
+        //Log.d(TAG, "Refreshing diceview")
         val dices = game.currentRound.dices
         for ((index, id) in diceViews.withIndex()) {
             val currentView: ImageButton = findViewById(id)
@@ -79,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     game.currentRound.selected.remove(index)
                     unDrawSelected(currView, game.currentRound.dices[index].value)
                 }
-                game.saveSelected()
+                game.currentRound.saveSelected()
 
                 println("Selected dice are: ${game.currentRound.selected}")
                 checkRollButton()
@@ -118,6 +109,8 @@ class MainActivity : AppCompatActivity() {
                     game.newRound()
                     refreshDiceView(true)
                 }
+            } else {
+                Toast.makeText(this, "Invalid combination.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -145,7 +138,10 @@ class MainActivity : AppCompatActivity() {
                 )
                 setPositiveButton(R.string.play_again) { _, _ ->
                     //game = Game() / /TODO: fix and kill savestate
-                    game.mainContext = this@MainActivity
+                    //game.mainContext = this@MainActivity
+
+
+
                     refreshDiceView(true)
                     setupSpinner()
                 }
@@ -192,9 +188,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun reDrawAllSelectedDice() {
-        for (id in game.selected) {
-            val faceValue = game.dices[id].value - 1
+    private fun reDrawAllSelectedDice() {
+        for (id in game.currentRound.selected) {
+            val faceValue = game.currentRound.dices[id].value - 1
             val myView = findViewById<ImageButton>(diceViews[id])
             myView.setImageResource(redDices[faceValue])
 
