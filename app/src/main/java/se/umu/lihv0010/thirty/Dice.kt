@@ -1,10 +1,13 @@
 package se.umu.lihv0010.thirty
 
+import java.util.*
+
 class Dice(
-        var value: Int = (1..6).random()
+        var rnd: Random,
+        var value: Int = rnd.nextInt(5) + 1
         ) {
 
     fun roll() {
-        value = (1..6).random()
+        value = rnd.nextInt(5) + 1
     }
 }

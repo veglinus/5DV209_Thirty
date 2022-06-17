@@ -3,12 +3,14 @@ package se.umu.lihv0010.thirty
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import java.util.*
 import java.lang.Exception
 
 private const val TAG = "MainViewModel"
 
 class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
-    var currentRound = Round(handle)
+    var rnd: Random = Random(System.currentTimeMillis())
+    var currentRound = Round(handle, rnd)
 
     val maxRounds = 10
 
@@ -31,19 +33,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     override fun onCleared() {
         handle.set("dices", currentRound.dices)
         super.onCleared()
-
-        Log.d(TAG, "ViewModel instance about to be destroyed")
-    }
-
-    fun newRound() {
-        // TODO: Refactor this into Round class
-        currentRound.dices = arrayListOf(Dice(), Dice(), Dice(), Dice(), Dice(), Dice()) // 6 dice objects, rollable
-        currentRound.selected = mutableListOf() // Index list of selected dice
-        currentRound.rolls = 0 // How many rolls have been made, max of 2 after initial allowed
-
-        handle.set("dices", currentRound.getDiceIntArray())
-        handle.set("selected", currentRound.selected)
-        handle.set("rolls", currentRound.rolls)
+        Log.d(TAG, "ViewModel onCleared")
     }
 
     fun validateSubmit(selected: Int): Boolean { // When submitting answer, validate it's correct
@@ -109,5 +99,16 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
         handle.set("selectors", selectors)
 
         println("$roundsPlayed out of $maxRounds")
+    }
+
+    fun newRound() { // Only called if a new round is actually needed
+        // TODO: Refactor this into Round class
+        currentRound.dices = arrayListOf(Dice(rnd), Dice(rnd), Dice(rnd), Dice(rnd), Dice(rnd), Dice(rnd)) // 6 dice objects, rollable
+        currentRound.selected = mutableListOf() // Index list of selected dice
+        currentRound.rolls = 0 // How many rolls have been made, max of 2 after initial allowed
+
+        handle.set("dices", currentRound.getDiceIntArray())
+        handle.set("selected", currentRound.selected)
+        handle.set("rolls", currentRound.rolls)
     }
 }

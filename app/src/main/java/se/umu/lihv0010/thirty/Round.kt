@@ -2,11 +2,14 @@ package se.umu.lihv0010.thirty
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "Round"
 
 class Round(private val handle: SavedStateHandle,
-            var dices: ArrayList<Dice> = arrayListOf(Dice(), Dice(), Dice(), Dice(), Dice(), Dice()),
+            var random: Random,
+            var dices: ArrayList<Dice> = arrayListOf(Dice(random), Dice(random), Dice(random), Dice(random), Dice(random), Dice(random)),
             var selected: MutableList<Int> = mutableListOf(),
             var rolls: Int = 0) {
 
@@ -24,13 +27,13 @@ class Round(private val handle: SavedStateHandle,
 
                 var newDices: ArrayList<Dice> = arrayListOf()
                 for (dice in savedDice) {
-                    newDices.add(Dice(dice))
+                    newDices.add(Dice(random, dice))
                 }
                 dices = newDices
 
             }
         } else {
-            dices = arrayListOf(Dice(), Dice(), Dice(), Dice(), Dice(), Dice())
+            dices = arrayListOf(Dice(random), Dice(random), Dice(random), Dice(random), Dice(random), Dice(random))
             Log.d(TAG, "Saved new dice")
             handle.set("dices", getDiceIntArray())
         }
@@ -58,16 +61,16 @@ class Round(private val handle: SavedStateHandle,
     fun selectedDiceValues(): MutableList<Int> {
         val values: MutableList<Int> = mutableListOf()
         for (id in selected) {
-            values.add(dices[id].value!!)
+            values.add(dices[id].value)
         }
         return values
     }
 
     fun getDiceIntArray(): ArrayList<Int> {
-        var arr = mutableListOf<Int>()
+        val arr = mutableListOf<Int>()
 
         for (dice in dices) {
-            arr.add(dice.value!!)
+            arr.add(dice.value)
         }
 
         return arr as ArrayList<Int>

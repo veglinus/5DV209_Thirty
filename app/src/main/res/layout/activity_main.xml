@@ -26,33 +26,18 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <ImageButton
+            <ImageButton style="@style/DiceImageButton"
                 android:id="@+id/dice1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/white1"
-                android:padding="5dp"
-                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="163dp"
                 tools:layout_editor_absoluteY="40dp" />
 
-            <ImageButton
+            <ImageButton style="@style/DiceImageButton"
                 android:id="@+id/dice2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/white1"
-                android:padding="5dp"
-                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="286dp"
                 tools:layout_editor_absoluteY="40dp" />
 
-            <ImageButton
+            <ImageButton style="@style/DiceImageButton"
                 android:id="@+id/dice3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/white1"
-                android:padding="5dp"
-                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="41dp"
                 tools:layout_editor_absoluteY="40dp" />
         </TableRow>
@@ -64,33 +49,18 @@
             android:gravity="center">
 
 
-            <ImageButton
+            <ImageButton style="@style/DiceImageButton"
                 android:id="@+id/dice4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/white1"
-                android:padding="5dp"
-                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="41dp"
                 tools:layout_editor_absoluteY="137dp" />
 
-            <ImageButton
+            <ImageButton style="@style/DiceImageButton"
                 android:id="@+id/dice5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/white1"
-                android:padding="5dp"
-                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="163dp"
                 tools:layout_editor_absoluteY="137dp" />
 
-            <ImageButton
+            <ImageButton style="@style/DiceImageButton"
                 android:id="@+id/dice6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/white1"
-                android:padding="5dp"
-                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="286dp"
                 tools:layout_editor_absoluteY="137dp" />
 
@@ -115,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:text="N/A"
+            android:text=""
             android:textSize="30sp" />
 
         <TextView
@@ -123,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:text="N/A"
+            android:text=""
             android:textSize="30sp" />
 
 
@@ -133,7 +103,7 @@
         android:id="@+id/reroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Roll all"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="@id/tableLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -162,10 +132,5 @@
             android:layout_height="wrap_content"
             android:text="@string/submit" />
     </LinearLayout>
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
