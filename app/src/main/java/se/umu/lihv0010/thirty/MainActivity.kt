@@ -22,13 +22,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d(TAG, "onCreate called")
         game = ViewModelProvider(this)[GameViewModel::class.java]
-
         setupListeners()
     }
 
@@ -125,41 +122,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun endGame() { // Ending the game and displaying results
-        println("Ending game!")
-        val results = game.results
-        val score = game.score
-        // Source: https://developer.android.com/guide/topics/ui/dialogs
-        this.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setMessage(
-                    "Low: " + results[0].toString() + "\n" +
-                            "4: " + results[1].toString() + "\n" +
-                            "5: " + results[2].toString() + "\n" +
-                            "6: " + results[3].toString() + "\n" +
-                            "7: " + results[4].toString() + "\n" +
-                            "8: " + results[5].toString() + "\n" +
-                            "9: " + results[6].toString() + "\n" +
-                            "10: " + results[7].toString() + "\n" +
-                            "11: " + results[8].toString() + "\n" +
-                            "12: " + results[9].toString() + "\n\n" +
-                            "Total score: $score"
-                )
-                setPositiveButton(R.string.play_again) { _, _ ->
-                    // TODO: Initialize new game
-                    refreshDiceView(true)
-                    setupSpinner()
-                }
-                setNegativeButton(R.string.exit) { _, _ ->
-                    moveTaskToBack(true)
-                    exitProcess(-1)
-                }
-            }
-            builder.create()
-        }?.show()
-    }
-
     private fun updateScoreAndRounds() { // Updates how many rounds are played and score
         binding.rounds.text = getString(R.string.rounds, game.roundsPlayed.toString())
         binding.score.text = getString(R.string.score, game.score.toString())
@@ -191,6 +153,42 @@ class MainActivity : AppCompatActivity() {
     private fun unDrawSelected(view: ImageButton, value: Int) { // Undraw a single selected dice
         val id = value - 1
         view.setImageResource(whiteDices[id])
+    }
+
+    private fun endGame() { // Ending the game and displaying results
+        println("Ending game!")
+        val results = game.results
+        val score = game.score
+        // Source: https://developer.android.com/guide/topics/ui/dialogs
+        this.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setMessage(
+                    "Low: " + results[0].toString() + "\n" +
+                            "4: " + results[1].toString() + "\n" +
+                            "5: " + results[2].toString() + "\n" +
+                            "6: " + results[3].toString() + "\n" +
+                            "7: " + results[4].toString() + "\n" +
+                            "8: " + results[5].toString() + "\n" +
+                            "9: " + results[6].toString() + "\n" +
+                            "10: " + results[7].toString() + "\n" +
+                            "11: " + results[8].toString() + "\n" +
+                            "12: " + results[9].toString() + "\n\n" +
+                            "Total score: $score"
+                )
+                setPositiveButton(R.string.play_again) { _, _ ->
+                    game.initNewGame()
+                    updateScoreAndRounds()
+                    refreshDiceView(true)
+                    setupSpinner()
+                }
+                setNegativeButton(R.string.exit) { _, _ ->
+                    moveTaskToBack(true)
+                    exitProcess(-1)
+                }
+            }
+            builder.create()
+        }?.show()
     }
 
     override fun onResume() {

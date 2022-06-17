@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import java.util.*
 import java.lang.Exception
 
-private const val TAG = "MainViewModel"
+private const val TAG = "GameViewModel"
 
 class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     var rnd: Random = Random(System.currentTimeMillis())
@@ -110,5 +110,15 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
         handle.set("dices", currentRound.getDiceIntArray())
         handle.set("selected", currentRound.selected)
         handle.set("rolls", currentRound.rolls)
+    }
+
+    fun initNewGame() {
+        score = 0
+        roundsPlayed = 0
+        results = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        selectors = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+
+        newRound()
+        currentRound.roll()
     }
 }
