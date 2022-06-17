@@ -10,13 +10,13 @@ import se.umu.lihv0010.thirty.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 
 private const val TAG = "MainActivity"
+private val whiteDices = intArrayOf(R.drawable.white1, R.drawable.white2, R.drawable.white3, R.drawable.white4, R.drawable.white5, R.drawable.white6)
+private val redDices = intArrayOf(R.drawable.red1, R.drawable.red2, R.drawable.red3, R.drawable.red4, R.drawable.red5, R.drawable.red6)
 
 class MainActivity : AppCompatActivity() {
-    private val diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
-    private val whiteDices = intArrayOf(R.drawable.white1, R.drawable.white2, R.drawable.white3, R.drawable.white4, R.drawable.white5, R.drawable.white6)
-    private val redDices = intArrayOf(R.drawable.red1, R.drawable.red2, R.drawable.red3, R.drawable.red4, R.drawable.red5, R.drawable.red6)
     private lateinit var binding: ActivityMainBinding
     private lateinit var game: GameViewModel
+    private lateinit var diceViews: Array<ImageButton>
 
     // TODO: Landscape layout
 
@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         game = ViewModelProvider(this)[GameViewModel::class.java]
+        diceViews = arrayOf(binding.dice1, binding.dice2, binding.dice3,
+                            binding.dice4, binding.dice5, binding.dice6)
         setupListeners()
     }
 
@@ -42,8 +44,7 @@ class MainActivity : AppCompatActivity() {
     private fun refreshDiceView(unDrawSelected: Boolean) { // Draws dice values to view
         //Log.d(TAG, "Refreshing diceview")
         val dices = game.currentRound.dices
-        for ((index, id) in diceViews.withIndex()) {
-            val currentView: ImageButton = findViewById(id)
+        for ((index, currentView) in diceViews.withIndex()) {
 
             val idOffset = dices[index].value - 1 // For array offset
             currentView.setImageResource(whiteDices[idOffset])
@@ -55,8 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupOnClickDiceLogic() { // Sets up logic for selection of dice
-        for ((index, id) in diceViews.withIndex()) { // Sets listeners for all dice
-            val currView: ImageButton = findViewById(id)
+        for ((index, currView) in diceViews.withIndex()) { // Sets listeners for all dice
             currView.setOnClickListener {
                 //println("You pressed dice: $index")
                 if (!game.currentRound.selected.contains(index)) { // Adds to selected list if not already in there, if so removes it
@@ -141,8 +141,8 @@ class MainActivity : AppCompatActivity() {
     /* For drawing and redrawing selected dices */
     private fun reDrawAllSelectedDice() { // Draw all selected dice
         for (id in game.currentRound.selected) {
-            val faceValue = game.currentRound.dices[id].value - 1
-            val myView = findViewById<ImageButton>(diceViews[id])
+            val faceValue: Int = game.currentRound.dices[id].value - 1
+            val myView: ImageButton = diceViews[id]
             myView.setImageResource(redDices[faceValue])
         }
     }
