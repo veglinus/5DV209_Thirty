@@ -2,51 +2,69 @@ package se.umu.lihv0010.thirty
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModelProvider
+import se.umu.lihv0010.thirty.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
-
 
 class MainActivity : AppCompatActivity() {
     private val diceViews = intArrayOf(R.id.dice1, R.id.dice2, R.id.dice3, R.id.dice4, R.id.dice5, R.id.dice6)
     private val whiteDices = intArrayOf(R.drawable.white1, R.drawable.white2, R.drawable.white3, R.drawable.white4, R.drawable.white5, R.drawable.white6)
     private val redDices = intArrayOf(R.drawable.red1, R.drawable.red2, R.drawable.red3, R.drawable.red4, R.drawable.red5, R.drawable.red6)
 
-    private var game = Game() // Initialize new game
+    private val TAG = "debug"
+    private lateinit var binding: ActivityMainBinding
+
+    private lateinit var game: MainViewModel
 
     // TODO: Handle state change
+    // TODO: True random dice?
     // TODO: Landscape layout
     // TODO: MVC Optimizations?
 
+    // TODO: Stylesheet as in föreläsning 3
+    // TODO: Replace findviewbyid with binding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setupListeners()
-        refreshDiceView(true)
+        Log.d(TAG, "onCreate called")
+
+        game = ViewModelProvider(this)[MainViewModel::class.java]
+
+        setupListeners() // TODO: This is being called every time we resume app also
+        refreshDiceView(false)
         game.mainContext = this@MainActivity
     }
 
-    private fun refreshDiceView(unDraw: Boolean) { // Draws dice values to view
+    fun setupListeners() {
+        Log.d(TAG, "Setting up ALL listeners!")
+        setupOnClickDiceLogic()
+        setupReroll()
+        setupSpinner()
+        setupSubmit()
+        updateScoreAndRounds()
+    }
+
+    fun refreshDiceView(unDrawSelected: Boolean) { // Draws dice values to view
+        Log.d(TAG, "Refreshing diceview")
         val dices = game.currentRound.dices
         for ((index, id) in diceViews.withIndex()) {
             val currentView: ImageButton = findViewById(id)
 
             val idOffset = dices[index].value - 1 // For array offset
             currentView.setImageResource(whiteDices[idOffset])
-            if (unDraw) {
+            if (unDrawSelected) {
                 unDrawSelected(currentView, dices[index].value)
             }
             checkRollButton()
         }
-    }
-
-    private fun setupListeners() {
-        setupOnClickDiceLogic()
-        setupReroll()
-        setupSpinner()
-        setupSubmit()
-        updateScoreAndRounds()
     }
 
     private fun setupOnClickDiceLogic() {
@@ -61,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                     game.currentRound.selected.remove(index)
                     unDrawSelected(currView, game.currentRound.dices[index].value)
                 }
+                game.saveSelected()
+
                 println("Selected dice are: ${game.currentRound.selected}")
                 checkRollButton()
             }
@@ -68,8 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupReroll() {
-        val reroll: Button = findViewById(R.id.reroll) // Reroll button
-        reroll.setOnClickListener {
+        binding.reroll.setOnClickListener {
             if (game.currentRound.rolls > 2) {
                 Toast.makeText(this, "Already rolled 2 times.", Toast.LENGTH_SHORT).show()
             }
@@ -78,20 +97,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateScoreAndRounds() {
-        val rounds: TextView = findViewById(R.id.rounds)
-        val score: TextView = findViewById(R.id.score)
-        rounds.text = getString(R.string.rounds, game.roundsPlayed.toString())
-        score.text = getString(R.string.score, game.score.toString())
-    }
-
     private fun setupSubmit() {
-        val submit: Button = findViewById(R.id.submit)
-        val spinner: Spinner = findViewById(R.id.spinner)
-
-        submit.setOnClickListener {
+        binding.submit.setOnClickListener {
             val validationSuccess: Boolean
-            val selectedScoring = spinner.selectedItem
+            val selectedScoring = binding.spinner.selectedItem
 
             validationSuccess = if (selectedScoring == "Low") {
                 game.validateSubmit(3)
@@ -106,8 +115,8 @@ class MainActivity : AppCompatActivity() {
                 if (game.roundsPlayed >= game.maxRounds) { // CHeck for win
                     endGame()
                 } else {
-                    game.currentRound = Round()
-                    refreshDiceView(validationSuccess)
+                    game.newRound()
+                    refreshDiceView(true)
                 }
             }
         }
@@ -135,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                             "Total score: $score"
                 )
                 setPositiveButton(R.string.play_again) { _, _ ->
-                    game = Game()
+                    //game = Game() / /TODO: fix and kill savestate
                     game.mainContext = this@MainActivity
                     refreshDiceView(true)
                     setupSpinner()
@@ -149,8 +158,12 @@ class MainActivity : AppCompatActivity() {
         }?.show()
     }
 
+    private fun updateScoreAndRounds() {
+        binding.rounds.text = getString(R.string.rounds, game.roundsPlayed.toString())
+        binding.score.text = getString(R.string.score, game.score.toString())
+    }
+
     private fun setupSpinner() {
-        val spinner: Spinner = findViewById(R.id.spinner)
         val newArray: MutableList<Any> = game.selectors.toMutableList()
 
         if (newArray.contains(3)) {
@@ -158,7 +171,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, newArray)
-        spinner.adapter = spinnerAdapter
+        binding.spinner.adapter = spinnerAdapter
     }
 
     private fun drawSelected(view: ImageButton, value: Int) {
@@ -171,13 +184,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkRollButton() {
-        val reroll: Button = findViewById(R.id.reroll) // Reroll button
-        reroll.isEnabled = game.currentRound.rolls < 2
-
+        binding.reroll.isEnabled = game.currentRound.rolls < 2
         if (game.currentRound.selected.isEmpty()) {
-            reroll.text = resources.getString(R.string.reroll_all)
+            binding.reroll.text = resources.getString(R.string.reroll_all)
         } else {
-            reroll.text = resources.getString(R.string.reroll_selected)
+            binding.reroll.text = resources.getString(R.string.reroll_selected)
         }
+    }
+
+    fun reDrawAllSelectedDice() {
+        for (id in game.selected) {
+            val faceValue = game.dices[id].value - 1
+            val myView = findViewById<ImageButton>(diceViews[id])
+            myView.setImageResource(redDices[faceValue])
+
+        }
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "Saving state")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "On resume")
+        reDrawAllSelectedDice()
     }
 }
