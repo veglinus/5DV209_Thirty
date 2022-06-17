@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var diceViews: Array<ImageButton>
 
     // TODO: Landscape layout
-    // TODO: EndGame should maybe be a new activity
+    // TODO: Check if we MUST do 2 rolls before submitting dice or not (forum)
 
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -141,16 +141,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSpinner() { // Handles dropdown menu for selection of points
         val newArray: MutableList<Any> = game.selectors.toMutableList()
-
         if (newArray.contains(3)) { // Sets the value "3" to low in the dropdown
             newArray[newArray.indexOf(3)] = "Low"
         }
-
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, newArray)
         binding.spinner.adapter = spinnerAdapter
     }
 
-    /* For drawing and redrawing selected dices */
     private fun reDrawAllSelectedDice() { // Draw all selected dice
         for (id in game.currentRound.selected) {
             val faceValue: Int = game.currentRound.dices[id].value - 1

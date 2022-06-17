@@ -9,19 +9,17 @@ import java.lang.Exception
 private const val TAG = "GameViewModel"
 
 class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
-    var rnd: Random = Random(System.currentTimeMillis())
+    private var rnd: Random = Random(System.currentTimeMillis())
     var currentRound = Round(handle, rnd)
 
-    val maxRounds = 10 // TODO: Fix, for debug purposes
-
-    var score: Int = 0
+    val maxRounds = 10
+    var score: Int = 0 // Total score (points)
     var roundsPlayed: Int = 0
-    var results: MutableList<Int> = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-    var selectors: MutableList<Int> = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+    var results: MutableList<Int> = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0) // Position in array corresponds to what selector was chosen, low to 12
+    var selectors: MutableList<Int> = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12) // Different choices, 3 being "low"
 
     init {
         Log.d(TAG, "ViewModel instance created")
-
         if (handle.contains("score")) score = handle.get<Int>("score") ?: 0
         if (handle.contains("roundsPlayed")) roundsPlayed = handle.get<Int>("roundsPlayed") ?: 0
         if (handle.contains("results")) results = handle.get<ArrayList<Int>>("results")?.toMutableList() ?:
@@ -39,8 +37,6 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     fun validateSubmit(selected: Int): Boolean { // When submitting answer, validate it's correct
         try {
             val diceNumbers: MutableList<Int> = currentRound.selectedDiceValues()
-            //println("Spinner is: $selected and dice values are: $diceNumbers")
-
             var sum = 0
             for (number in diceNumbers) {
                 sum += number
@@ -86,19 +82,14 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     }
 
     private fun finishRound(selected: Int, points: Int) {
-        println("Round finished! Score added: $points")
+        //println("Round finished! Score added: $points")
         selectors.remove(selected)
         score += points
         results[selected - 3] = points
-        println(results)
         roundsPlayed++
+        setRoundHandles()
 
-        handle.set("score", score)
-        handle.set("roundsPlayed", roundsPlayed)
-        handle.set("results", results)
-        handle.set("selectors", selectors)
-
-        println("$roundsPlayed out of $maxRounds")
+        //println("$roundsPlayed out of $maxRounds")
     }
 
     fun newRound() { // Only called if a new round is actually needed
@@ -117,12 +108,16 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
         roundsPlayed = 0
         results = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         selectors = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+        setRoundHandles()
+
+        newRound()
+        currentRound.roll()
+    }
+
+    private fun setRoundHandles() {
         handle.set("score", score)
         handle.set("roundsPlayed", roundsPlayed)
         handle.set("results", results)
         handle.set("selectors", selectors)
-
-        newRound()
-        currentRound.roll()
     }
 }

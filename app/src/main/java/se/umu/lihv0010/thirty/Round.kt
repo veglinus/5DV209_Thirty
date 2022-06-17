@@ -17,20 +17,15 @@ class Round(private val handle: SavedStateHandle,
         if (handle.contains("selected")) selected = handle.get<ArrayList<Int>>("selected")?.toMutableList() ?:
                 mutableListOf()
         if (handle.contains("rolls")) rolls = handle.get<Int>("rolls") ?: 0
-
-
         if (handle.contains("dices")) {
             val savedDice = handle.get<ArrayList<Int>>("dices")
-
             if (savedDice != null) {
                 Log.d(TAG, "Recovering saved dice: $savedDice")
-
-                var newDices: ArrayList<Dice> = arrayListOf()
+                val newDices: ArrayList<Dice> = arrayListOf()
                 for (dice in savedDice) {
                     newDices.add(Dice(random, dice))
                 }
                 dices = newDices
-
             }
         } else {
             dices = arrayListOf(Dice(random), Dice(random), Dice(random), Dice(random), Dice(random), Dice(random))
@@ -95,11 +90,9 @@ class Round(private val handle: SavedStateHandle,
         handle.set("dices", getDiceIntArray())
         handle.set("selected", selected)
         handle.set("rolls", rolls)
-        //println("Rolls are now: $rolls")
     }
 
     private fun clearSelected() {
         this.selected = mutableListOf() // Clears selected list
-        //println("Selected dice are $selected")
     }
 }
