@@ -1,13 +1,15 @@
 package se.umu.lihv0010.thirty
 
-import android.app.AlertDialog
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import se.umu.lihv0010.thirty.databinding.ActivityMainBinding
-import kotlin.system.exitProcess
 
 private const val TAG = "MainActivity"
 private val whiteDices = intArrayOf(R.drawable.white1, R.drawable.white2, R.drawable.white3, R.drawable.white4, R.drawable.white5, R.drawable.white6)
@@ -19,6 +21,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var diceViews: Array<ImageButton>
 
     // TODO: Landscape layout
+    // TODO: EndGame should maybe be a new activity
+
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "ACTIVITY RETURNED")
+            game.initNewGame()
+            updateScoreAndRounds()
+            refreshDiceView(true)
+            setupSpinner()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,39 +170,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun endGame() { // Ending the game and displaying results
         println("Ending game!")
-        val results = game.results
-        val score = game.score
-        // Source: https://developer.android.com/guide/topics/ui/dialogs
-        this.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setMessage(
-                    "Low: " + results[0].toString() + "\n" +
-                            "4: " + results[1].toString() + "\n" +
-                            "5: " + results[2].toString() + "\n" +
-                            "6: " + results[3].toString() + "\n" +
-                            "7: " + results[4].toString() + "\n" +
-                            "8: " + results[5].toString() + "\n" +
-                            "9: " + results[6].toString() + "\n" +
-                            "10: " + results[7].toString() + "\n" +
-                            "11: " + results[8].toString() + "\n" +
-                            "12: " + results[9].toString() + "\n\n" +
-                            "Total score: $score"
-                )
-                setPositiveButton(R.string.play_again) { _, _ ->
-                    game.initNewGame()
-                    updateScoreAndRounds()
-                    refreshDiceView(true)
-                    setupSpinner()
-                }
-                setNegativeButton(R.string.exit) { _, _ ->
-                    moveTaskToBack(true)
-                    exitProcess(-1)
-                }
-            }
-            builder.create()
-        }?.show()
+
+        val intent = Intent(this, ShowResultsActivity::class.java).apply {
+            putExtra("RESULTS", game.results.toIntArray())
+            putExtra("SCORE", game.score)
+        }
+
+        resultLauncher.launch(intent)
     }
+
+
+
 
     override fun onResume() {
         super.onResume()

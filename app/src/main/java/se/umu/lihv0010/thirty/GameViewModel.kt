@@ -12,7 +12,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     var rnd: Random = Random(System.currentTimeMillis())
     var currentRound = Round(handle, rnd)
 
-    val maxRounds = 10
+    val maxRounds = 10 // TODO: Fix, for debug purposes
 
     var score: Int = 0
     var roundsPlayed: Int = 0
@@ -117,6 +117,10 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
         roundsPlayed = 0
         results = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         selectors = mutableListOf(3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+        handle.set("score", score)
+        handle.set("roundsPlayed", roundsPlayed)
+        handle.set("results", results)
+        handle.set("selectors", selectors)
 
         newRound()
         currentRound.roll()
