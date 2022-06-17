@@ -1,7 +1,5 @@
 package se.umu.lihv0010.thirty
 
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import se.umu.lihv0010.thirty.databinding.ActivityShowResultsBinding
@@ -15,45 +13,35 @@ class ShowResultsActivity : AppCompatActivity() {
         binding = ActivityShowResultsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        writeScore()
-        writeResults()
+        showScore()
+        showResults()
         buttonListeners()
     }
 
-    private fun buttonListeners() {
-        binding.quitButton.setOnClickListener {
+    private fun buttonListeners() { // Listeners for the two buttons
+        binding.quitButton.setOnClickListener { // Exits if exit button is pressed
             moveTaskToBack(true)
             exitProcess(-1)
         }
-        binding.newGameButton.setOnClickListener {
-            println("Finishing activity")
-
+        binding.newGameButton.setOnClickListener { // Returns to resultLauncher and a new game is created
             setResult(RESULT_OK)
-
             finish()
-
         }
     }
 
-    private fun writeScore() {
+    private fun showScore() {
         val score = intent.getIntExtra("SCORE", 0)
-        binding.scoreText.text = "Score: " + score.toString()
+        binding.scoreText.text = getString(R.string.score, score.toString())
     }
 
-    private fun writeResults() {
+    private fun showResults() {
         val results = intent.getIntArrayExtra("RESULTS")
         if (results != null) {
-            binding.resultText.text =
-                "Low: " + results[0].toString() + "\n" +
-                        "4: " + results[1].toString() + "\n" +
-                        "5: " + results[2].toString() + "\n" +
-                        "6: " + results[3].toString() + "\n" +
-                        "7: " + results[4].toString() + "\n" +
-                        "8: " + results[5].toString() + "\n" +
-                        "9: " + results[6].toString() + "\n" +
-                        "10: " + results[7].toString() + "\n" +
-                        "11: " + results[8].toString() + "\n" +
-                        "12: " + results[9].toString() + "\n"
+            binding.resultText.text = resources.getString(R.string.resultText,
+                results[0].toString(), results[1].toString(), results[2].toString(),
+                results[3].toString(), results[4].toString(), results[5].toString(),
+                results[6].toString(), results[7].toString(), results[8].toString(),
+                results[9].toString())
         }
     }
 }

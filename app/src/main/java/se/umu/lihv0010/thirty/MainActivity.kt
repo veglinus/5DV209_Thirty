@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -178,9 +177,6 @@ class MainActivity : AppCompatActivity() {
 
         resultLauncher.launch(intent)
     }
-
-
-
 
     override fun onResume() {
         super.onResume()
