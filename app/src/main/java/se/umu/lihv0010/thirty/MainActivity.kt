@@ -19,9 +19,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var game: GameViewModel
     private lateinit var diceViews: Array<ImageButton>
 
-    // TODO: Landscape layout
-    // TODO: Check if we MUST do 2 rolls before submitting dice or not (forum)
-
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "ACTIVITY RETURNED")
