@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
         val dices = game.currentRound.dices
         for ((index, currentView) in diceViews.withIndex()) {
 
-            val idOffset = dices[index].value - 1 // For array offset
+            val idOffset = dices[index].getDiceValue() - 1 // For array offset
             currentView.setImageResource(whiteDices[idOffset])
             if (unDrawSelected) {
-                unDrawSelected(currentView, dices[index].value)
+                unDrawSelected(currentView, dices[index].getDiceValue())
             }
             checkRollButton()
         }
@@ -70,10 +70,10 @@ class MainActivity : AppCompatActivity() {
                 //println("You pressed dice: $index")
                 if (!game.currentRound.selected.contains(index)) { // Adds to selected list if not already in there, if so removes it
                     game.currentRound.selected.add(index)
-                    drawSelected(currView, game.currentRound.dices[index].value)
+                    drawSelected(currView, game.currentRound.dices[index].getDiceValue())
                 } else { // If already in list, remove from selected list
                     game.currentRound.selected.remove(index)
-                    unDrawSelected(currView, game.currentRound.dices[index].value)
+                    unDrawSelected(currView, game.currentRound.dices[index].getDiceValue())
                 }
                 game.currentRound.saveSelected() // Saves selected dice in savedstate
 
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun reDrawAllSelectedDice() { // Draw all selected dice
         for (id in game.currentRound.selected) {
-            val faceValue: Int = game.currentRound.dices[id].value - 1
+            val faceValue: Int = game.currentRound.dices[id].getDiceValue() - 1
             val myView: ImageButton = diceViews[id]
             myView.setImageResource(redDices[faceValue])
         }
@@ -170,6 +170,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         resultLauncher.launch(intent)
+
+        recreate()
     }
 
     override fun onResume() {

@@ -2,6 +2,7 @@ package se.umu.lihv0010.thirty
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup
 import se.umu.lihv0010.thirty.databinding.ActivityShowResultsBinding
 import kotlin.system.exitProcess
 
@@ -19,10 +20,6 @@ class ShowResultsActivity : AppCompatActivity() {
     }
 
     private fun buttonListeners() { // Listeners for the two buttons
-        binding.quitButton.setOnClickListener { // Exits if exit button is pressed
-            moveTaskToBack(true)
-            exitProcess(-1)
-        }
         binding.newGameButton.setOnClickListener { // Returns to resultLauncher and a new game is created
             setResult(RESULT_OK)
             finish()

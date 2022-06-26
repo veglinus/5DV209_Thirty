@@ -4,10 +4,14 @@ import java.util.*
 
 class Dice(
         private var rnd: Random,
-        var value: Int = rnd.nextInt(5) + 1
+        private var value: Int = rnd.nextInt(5) + 1
         ) {
 
     fun roll() {
         value = rnd.nextInt(5) + 1
+    }
+
+    fun getDiceValue(): Int {
+        return this.value
     }
 }

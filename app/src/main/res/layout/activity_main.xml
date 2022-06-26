@@ -10,14 +10,15 @@
 
     <TableLayout
         android:id="@+id/tableLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:context=".MainActivity">
 
         <TableRow
@@ -26,18 +27,21 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <ImageButton style="@style/DiceImageButton"
+            <ImageButton
                 android:id="@+id/dice1"
+                style="@style/DiceImageButton"
                 tools:layout_editor_absoluteX="163dp"
                 tools:layout_editor_absoluteY="40dp" />
 
-            <ImageButton style="@style/DiceImageButton"
+            <ImageButton
                 android:id="@+id/dice2"
+                style="@style/DiceImageButton"
                 tools:layout_editor_absoluteX="286dp"
                 tools:layout_editor_absoluteY="40dp" />
 
-            <ImageButton style="@style/DiceImageButton"
+            <ImageButton
                 android:id="@+id/dice3"
+                style="@style/DiceImageButton"
                 tools:layout_editor_absoluteX="41dp"
                 tools:layout_editor_absoluteY="40dp" />
         </TableRow>
@@ -49,18 +53,21 @@
             android:gravity="center">
 
 
-            <ImageButton style="@style/DiceImageButton"
+            <ImageButton
                 android:id="@+id/dice4"
+                style="@style/DiceImageButton"
                 tools:layout_editor_absoluteX="41dp"
                 tools:layout_editor_absoluteY="137dp" />
 
-            <ImageButton style="@style/DiceImageButton"
+            <ImageButton
                 android:id="@+id/dice5"
+                style="@style/DiceImageButton"
                 tools:layout_editor_absoluteX="163dp"
                 tools:layout_editor_absoluteY="137dp" />
 
-            <ImageButton style="@style/DiceImageButton"
+            <ImageButton
                 android:id="@+id/dice6"
+                style="@style/DiceImageButton"
                 tools:layout_editor_absoluteX="286dp"
                 tools:layout_editor_absoluteY="137dp" />
 
@@ -68,17 +75,20 @@
 
     </TableLayout>
 
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:orientation="vertical"
 
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
 
         <TextView
             android:id="@+id/rounds"
@@ -99,14 +109,6 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/reroll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="@id/tableLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
     <LinearLayout
@@ -132,5 +134,14 @@
             android:layout_height="wrap_content"
             android:text="@string/submit" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/reroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,7 +56,7 @@ class Round(private val handle: SavedStateHandle,
     fun selectedDiceValues(): MutableList<Int> {
         val values: MutableList<Int> = mutableListOf()
         for (id in selected) {
-            values.add(dices[id].value)
+            values.add(dices[id].getDiceValue())
         }
         return values
     }
@@ -65,7 +65,7 @@ class Round(private val handle: SavedStateHandle,
         val arr = mutableListOf<Int>()
 
         for (dice in dices) {
-            arr.add(dice.value)
+            arr.add(dice.getDiceValue())
         }
 
         return arr as ArrayList<Int>

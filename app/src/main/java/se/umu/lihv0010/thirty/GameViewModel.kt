@@ -71,8 +71,26 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
 
     private fun otherCalculation(sum: Int, selected: Int): Boolean {
         val isDivisible: Boolean = (sum % selected == 0)
+        var tempArr = currentRound.selectedDiceValues().toMutableList() // To duplicate
 
-        return if (isDivisible) {
+        for (dice in currentRound.selectedDiceValues()) {
+            println(tempArr)
+            if (dice == selected) {
+                tempArr.remove(dice)
+            } else {
+                val leftover: Int = selected - dice
+                //println("Leftover exists: $leftover")
+                if (tempArr.contains(leftover)) {
+                    //println("Found a leftover, removing both")
+                    tempArr.remove(dice)
+                    tempArr.remove(leftover)
+                } else {
+                    println("That combination is not possible.")
+                }
+            }
+        }
+
+        return if (isDivisible && tempArr.isEmpty()) {
             finishRound(selected, sum)
             true
         } else {
