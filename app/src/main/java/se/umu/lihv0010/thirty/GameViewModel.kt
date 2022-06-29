@@ -12,7 +12,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     private var rnd: Random = Random(System.currentTimeMillis())
     var currentRound = Round(handle, rnd)
 
-    val maxRounds = 10
+    val maxRounds = 1
     var score: Int = 0 // Total score (points)
     var roundsPlayed: Int = 0
     var results: MutableList<Int> = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0) // Position in array corresponds to what selector was chosen, low to 12

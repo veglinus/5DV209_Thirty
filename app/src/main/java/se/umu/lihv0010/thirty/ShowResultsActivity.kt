@@ -41,4 +41,10 @@ class ShowResultsActivity : AppCompatActivity() {
                 results[9].toString())
         }
     }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        setResult(RESULT_OK)
+        finish()
+    }
 }

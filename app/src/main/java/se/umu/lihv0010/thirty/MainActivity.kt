@@ -170,8 +170,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         resultLauncher.launch(intent)
-
-        recreate()
     }
 
     override fun onResume() {
